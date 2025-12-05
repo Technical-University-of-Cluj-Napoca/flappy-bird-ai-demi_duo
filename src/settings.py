@@ -1,0 +1,22 @@
+# settings.py
+
+# Ecran și Configurare
+SCALE_FACTOR = 2
+GAME_WIDTH = 288
+GAME_HEIGHT = 512
+WINDOW_WIDTH = int(GAME_WIDTH * SCALE_FACTOR)
+WINDOW_HEIGHT = int(GAME_HEIGHT * SCALE_FACTOR)
+FPS = 120
+
+# Fizică Pasăre
+GRAVITY = 0.12
+FLAP_STRENGTH = -3.5
+ROTATION_SPEED = 2
+
+# Conducte (Pipes)
+PIPE_MOVE_SPEED = 2
+PIPE_SPAWN_TIME = 1000 # milisecunde
+PIPE_HEIGHTS = [200, 300, 400]
+
+# Diverse
+FADE_SPEED = 2
