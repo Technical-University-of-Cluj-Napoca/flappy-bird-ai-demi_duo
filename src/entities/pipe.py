@@ -6,8 +6,9 @@ class Pipe:
     def __init__(self, pipe_img, x_pos):
         self.image = pipe_img
         self.x = x_pos
-        self.height = random.choice(PIPE_HEIGHTS)
         self.passed = False # Flag util pentru scor și AI logic
+        #self.height = random.choice(PIPE_HEIGHTS)
+        self.height = random.randint(170, 430)
         
         # Definirea rect-urilor
         # Țeava de jos
