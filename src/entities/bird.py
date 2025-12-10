@@ -7,7 +7,7 @@ class Bird:
         self.frames = frames
         self.sounds = sounds
         self.image = self.frames[0]
-        self.rect = self.image.get_rect(center=(50, GAME_HEIGHT / 2))
+        self.rect = self.image.get_rect(center=(BIRD_START_X, BIRD_START_Y))
         self.movement = 0
         self.index = 0
 
@@ -48,7 +48,7 @@ class Bird:
         return False
 
     def reset(self):
-        self.rect.center = (50, GAME_HEIGHT / 2)
+        self.rect.center = (BIRD_START_X, BIRD_START_Y)
         self.movement = 0
         self.alive = True
         self.fitness = 0

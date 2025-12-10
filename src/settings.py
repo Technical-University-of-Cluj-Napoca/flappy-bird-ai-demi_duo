@@ -24,3 +24,15 @@ FADE_SPEED = 2
 # AI
 THRESHOLD_FLAP = 0.5
 POPULATION_SIZE = 50
+
+# Medal thresholds
+MEDAL_SCORES = {
+    'bronze': 10,
+    'silver': 20,
+    'gold': 30,
+    'platinum': 40
+}
+
+# Bird Coordinates
+BIRD_START_X = 50
+BIRD_START_Y = GAME_HEIGHT / 2
