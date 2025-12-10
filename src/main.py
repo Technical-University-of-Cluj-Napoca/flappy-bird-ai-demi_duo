@@ -168,7 +168,17 @@ while True:
             if alive_count == 0:
                 # All birds died - Restart immediately or go to next gen
                 # For now (Random AI), just reset the game loop
-                reset_game()
+                population.natural_selection()
+                
+                # --- RESET ENVIRONMENT WITHOUT DELETING POPULATION ---
+                pipe_manager.clear()
+                pipe_manager.spawn_pipe()  # Spawn first pipe immediately
+                score = 0
+                fade_alpha = 0  # Reset day/night cycle
+                
+                # Reset pipe spawn timer to sync with new generation start
+                next_spawn_time = random.randint(1400, 2000)
+                pygame.time.set_timer(SPAWNPIPE, next_spawn_time)
 
             # 3. Score Logic (AI)
             # In AI mode, score is usually generation count or max fitness

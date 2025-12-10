@@ -18,6 +18,23 @@ def load_assets():
     # Pipes
     assets['pipe'] = pygame.image.load('assets/sprites/pipe-green.png').convert()
 
+    # --- Bird Skins ---
+    # We will store them in a dictionary: 'blue', 'red', 'yellow'
+    assets['bird_skins'] = {}
+    
+    colors = ['blue', 'red', 'yellow']
+    for color in colors:
+        path = f'assets/sprites/{color}bird/'
+        frames = [
+            pygame.image.load(path + f'{color}bird-downflap.png').convert_alpha(),
+            pygame.image.load(path + f'{color}bird-midflap.png').convert_alpha(),
+            pygame.image.load(path + f'{color}bird-upflap.png').convert_alpha()
+        ]
+        assets['bird_skins'][color] = frames
+
+    # Keep default for manual mode compatibility if needed
+    assets['bird_frames'] = assets['bird_skins']['blue']
+
     # Bird Animation Frames
     bird_down = pygame.image.load('assets/sprites/bluebird/bluebird-downflap.png').convert_alpha()
     bird_mid = pygame.image.load('assets/sprites/bluebird/bluebird-midflap.png').convert_alpha()
