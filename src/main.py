@@ -17,7 +17,6 @@ pygame.mixer.init()
 screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Flappy Bird AI 2025")
 
-# Setează iconița
 assets = load_assets()
 if 'icon' in assets:
     pygame.display.set_icon(assets['icon'])
@@ -31,13 +30,9 @@ title_rect = assets['label_flappy_bird'].get_rect(center=(GAME_WIDTH/2, GAME_HEI
 panel_rect = assets['panel_score'].get_rect(center=(GAME_WIDTH/2, GAME_HEIGHT/2))
 pause_btn_rect = assets['button_pause'].get_rect(topleft=(30, 30))
 restart_btn_rect = assets['button_restart'].get_rect(topright=(pause_btn_rect.right + 230, 30))
-# Butonul Classic (Stânga)
 classic_btn_rect = assets['button_classic'].get_rect(center=(GAME_WIDTH/2 - 50, GAME_HEIGHT/2 + 90))
-# Butonul AI (Dreapta)
 ai_btn_rect = assets['button_ai'].get_rect(center=(GAME_WIDTH/2 + 50, GAME_HEIGHT/2 + 90))
 highest_btn_rect = assets['button_highest'].get_rect(center=(GAME_WIDTH/2, GAME_HEIGHT/2 + 150))
-
-# Imaginea de Tutorial (Get Ready)
 message_rect = assets['message'].get_rect(center=(GAME_WIDTH/2, GAME_HEIGHT/2.5))
 
 # --- CONFIG ---
@@ -57,10 +52,9 @@ game_state = "MENU"
 
 score = 0
 
-#high_score = 0
 high_score_manual = 0
 high_score_ai = 0
-show_high_scores = False  # Folosit pentru toggle la butonul Highest
+show_high_scores = False  
 
 floor_x_pos = 0
 fade_alpha = 0
@@ -77,7 +71,6 @@ def display_score(val, x, y, sprite_dict):
     score_str = str(int(val))
     total_width = 0
     
-    # Calculăm lățimea folosind imaginile din dicționarul primit
     for digit in score_str:
         total_width += sprite_dict[digit].get_width()
 
@@ -87,10 +80,10 @@ def display_score(val, x, y, sprite_dict):
         game_surface.blit(img, (current_x, y))
         current_x += img.get_width()
 
+# --- RESET ---
 def reset_game():
     global game_state, score, fade_alpha, hit_sound_played, die_sound_played
     
-    # MODIFICARE: Trecem în GET_READY, nu direct în PLAYING
     game_state = "GET_READY"
     
     pipe_manager.clear()
@@ -99,66 +92,55 @@ def reset_game():
     hit_sound_played = False
     die_sound_played = False
     
-    # Resetăm pasărea la poziția de start
     bird.reset()
 
-    # Dacă e AI, îl resetăm
     if GAME_MODE == "AI":
-        #population = Population(POPULATION_SIZE, assets)
-        # AI-ul nu are nevoie de tutorial, poate începe direct
         game_state = "PLAYING"
         pipe_manager.spawn_pipe()
         pygame.time.set_timer(SPAWNPIPE, 1200)
 
+
+# --- START ---
 def start_playing():
-    """Funcție nouă care pornește efectiv jocul (țevile)"""
     global game_state
     game_state = "PLAYING"
     
-    # Prima săritură
     if GAME_MODE == "MANUAL":
         bird.flap()
         
-    # Pornim țevile
     pipe_manager.spawn_pipe()
     pygame.time.set_timer(SPAWNPIPE, 1200)
 
+# --- MENU UI ---
 def draw_menu():
     game_surface.blit(assets['label_flappy_bird'], title_rect)
     game_surface.blit(assets['button_play'], play_btn_rect)
 
-    # Butonul Play
     if is_play_btn_pressed:
         game_surface.blit(assets['button_play_pressed'], play_btn_rect)
     else:
         game_surface.blit(assets['button_play'], play_btn_rect)
 
-    # --- DESENARE BUTOANE MOD ---
-    
-    # 1. Desenăm butonul CLASSIC
-    # Dacă modul e MANUAL, e complet vizibil (255). Dacă nu, e transparent (100)
     alpha_classic = 255 if GAME_MODE == "MANUAL" else 100
     assets['button_classic'].set_alpha(alpha_classic)
     game_surface.blit(assets['button_classic'], classic_btn_rect)
 
-    # 2. Desenăm butonul AI
     alpha_ai = 255 if GAME_MODE == "AI" else 100
     assets['button_ai'].set_alpha(alpha_ai)
 
     game_surface.blit(assets['button_ai'], ai_btn_rect)
     game_surface.blit(assets['button_highest'], highest_btn_rect)
 
+    # --- SCORE ---
     if show_high_scores:
-        # Scor Manual (sub butonul Classic) - folosim fontul mic
-        display_score(high_score_manual, classic_btn_rect.centerx, classic_btn_rect.bottom + 7, assets['score_small_sprites'])
-        
-        # Scor AI (sub butonul AI) - folosim fontul mic
+        display_score(high_score_manual, classic_btn_rect.centerx, classic_btn_rect.bottom + 7, assets['score_small_sprites'])        
         display_score(high_score_ai, ai_btn_rect.centerx, ai_btn_rect.bottom + 7, assets['score_small_sprites'])
 
+# --- TUTORIAL UI ---
 def draw_get_ready():
-    """Desenează ecranul de tutorial"""
     game_surface.blit(assets['message'], message_rect)
 
+# --- GAME OVER UI ---
 def draw_game_over_ui():
     game_surface.blit(assets['game_over'], assets['game_over'].get_rect(center=(GAME_WIDTH/2, GAME_HEIGHT/2 - 80)))
     game_surface.blit(assets['panel_score'], panel_rect)
@@ -208,12 +190,10 @@ while True:
                     print("Selected: AI")
                 
                 if highest_btn_rect.collidepoint(game_mouse_pos):
-                    # Inversăm starea: dacă e vizibil devine invizibil și invers
                     show_high_scores = not show_high_scores
                     print(f"Show Scores: {show_high_scores}")
             
             elif game_state == "GET_READY":
-                # Orice click pornește jocul
                 start_playing()
 
             elif game_state == "PLAYING":
@@ -224,20 +204,17 @@ while True:
                     bird.flap()
             
             elif game_state == "PAUSED":
-                # Dacă apăsăm oriunde (sau strict pe buton), reluăm jocul
-                # De obicei e bine să fie strict pe butonul de Resume:
                 if pause_btn_rect.collidepoint(game_mouse_pos):
                     game_state = "PLAYING"
 
                 if restart_btn_rect.collidepoint(game_mouse_pos):
-                    reset_game() # Te trimite înapoi la "Get Ready
+                    reset_game() 
                     game_state = "MENU"
             
             elif game_state == "GAMEOVER":
                 game_state = "MENU"
                 is_play_btn_pressed = False
 
-        # Input Tastatură
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 if game_state == "MENU":
@@ -263,7 +240,7 @@ while True:
             pygame.time.set_timer(SPAWNPIPE, next_time)
 
     # --- DRAW & UPDATE ---
-    
+
     # 1. Background
     game_surface.blit(assets['bg_day'], (0,0))
     
@@ -274,7 +251,7 @@ while True:
         assets['bg_night'].set_alpha(fade_alpha)
         game_surface.blit(assets['bg_night'], (0,0))
 
-    # 2. Logică per State
+    # 2. Logic per State
     if game_state == "MENU":
         draw_floor() 
         floor_x_pos -= 1
@@ -284,7 +261,7 @@ while True:
         draw_floor()
         floor_x_pos -= 1
         
-        # Desenăm tutorialul
+        # Draw tutorial
         draw_get_ready()
 
     elif game_state == "PLAYING":
@@ -330,21 +307,20 @@ while True:
 
     elif game_state == "PAUSED":
         pipe_manager.draw(game_surface)
-        draw_floor() # Nu scădem floor_x_pos, deci podeaua stă pe loc
+        draw_floor() 
         
-        # 2. Pasărea (fără move() sau animate())
+        # 2. The bird (without move() or animate())
         if GAME_MODE == "MANUAL":
             bird.draw(game_surface)
         elif GAME_MODE == "AI":
-            # Pentru AI trebuie să desenăm toată populația statică
+            # For AI we draw the entire population
             for b in population.birds:
                 if b.alive: b.draw(game_surface)
 
-        # 3. Scorul
+        # 3. Score
         display_score(score, GAME_WIDTH/2, 50, assets['score_sprites'])
 
-        # 4. Desenăm butonul de RESUME (imaginea >)
-        # Folosim același rect, dar altă imagine
+        # 4. RESUME button
         game_surface.blit(assets['button_resume'], pause_btn_rect)
 
         game_surface.blit(assets['button_restart'], restart_btn_rect)
@@ -368,7 +344,6 @@ while True:
         if GAME_MODE == "MANUAL":
             if score > high_score_manual:
                 high_score_manual = score
-                # Aici folosim high_score_manual pentru afișare în panou
                 current_high = high_score_manual
         else:
             if score > high_score_ai:

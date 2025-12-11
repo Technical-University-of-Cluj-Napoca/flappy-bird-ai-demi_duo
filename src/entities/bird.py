@@ -35,13 +35,13 @@ class Bird:
             surface.blit(rotated_bird, self.rect)
 
     def check_collision(self, pipe_manager):
-        # Verificăm fiecare țeavă din manager
+        # Check each pipe from manager
         for pipe in pipe_manager.pipes:
-            # O țeavă are două rect-uri: top și bottom
+            # A pipe has 2 rects: top and bottom
             if self.rect.colliderect(pipe.rect_top) or self.rect.colliderect(pipe.rect_bottom):
                 return True
         
-        # Coliziune podea/tavan
+        # Colision with ground or ceiling
         if self.rect.top <= -50 or self.rect.bottom >= 450:
             return True
             

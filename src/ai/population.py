@@ -1,6 +1,5 @@
 from entities.bird import Bird
-from ai.species import Species  # <--- Import your new class
-import random
+from ai.species import Species  
 
 class Population:
     def __init__(self, size, assets):
@@ -13,7 +12,6 @@ class Population:
         self.available_skins = ['blue', 'red', 'yellow']
         
         # Initialize first generation (defaulting to Blue)
-        # Note: Ensure you have updated assets.py to include 'bird_skins'
         self.birds = [Bird(assets['bird_skins']['blue'], assets['sounds']) for _ in range(size)]
 
     def update(self, pipe_manager, game_surface):

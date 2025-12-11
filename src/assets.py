@@ -2,9 +2,6 @@ import pygame
 import os
 
 def load_assets():
-    """
-    Încarcă toate imaginile și sunetele și le returnează într-un dicționar structurat.
-    """
     assets = {}
 
     # --- ICON ---
@@ -35,7 +32,7 @@ def load_assets():
         ]
         assets['bird_skins'][color] = frames
 
-    # Keep default for manual mode compatibility if needed
+    # Kept default for manual mode compatibility
     assets['bird_frames'] = assets['bird_skins']['blue']
 
     # Bird Animation Frames
@@ -60,7 +57,7 @@ def load_assets():
     raw_classic = pygame.image.load('assets/sprites/ui/button_classic.png').convert_alpha()
     raw_highest = pygame.image.load('assets/sprites/ui/button_highest.png').convert_alpha()
     
-    # Le scalăm la fel ca pe celelalte (ex: 2x)
+    # Scaling factor
     SCALE_BTN = 2.0 
     new_size_ai = (int(raw_ai.get_width() * SCALE_BTN), int(raw_ai.get_height() * SCALE_BTN))
     new_size_classic = (int(raw_classic.get_width() * SCALE_BTN), int(raw_classic.get_height() * SCALE_BTN))
@@ -73,23 +70,21 @@ def load_assets():
     raw_restart = pygame.image.load('assets/sprites/ui/button_restart.png').convert_alpha()
     new_size_restart = (int(raw_restart.get_width() * SCALE_BTN), int(raw_restart.get_height() * SCALE_BTN))
     assets['button_restart'] = pygame.transform.scale(raw_restart, new_size_restart)
-
     assets['button_menu'] = pygame.image.load('assets/sprites/ui/button_menu.png').convert_alpha()
-   # --- PAUSE & RESUME (Mărite) ---
-    # 1. Încărcăm imaginea originală
+
+    # --- PAUSE & RESUME ---
+    # 1. Load raw images
     raw_pause = pygame.image.load('assets/sprites/ui/button_pause.png').convert_alpha()
     raw_resume = pygame.image.load('assets/sprites/ui/button_resume.png').convert_alpha()
     
-    # 2. Definim dimensiunea dorită (ex: 26x28, dublu față de originalul 13x14)
-    # Poți pune valori fixe (ex: (40, 40)) sau un factor de scalare
+    # 2. Scale images
     new_size_pause = (int(raw_pause.get_width() * SCALE_BTN), int(raw_pause.get_height() * SCALE_BTN))
     new_size_resume = (int(raw_resume.get_width() * SCALE_BTN), int(raw_resume.get_height() * SCALE_BTN))
     
-    # 3. Salvăm versiunea mărită în dicționar
+    # 3. Store scaled images
     assets['button_pause'] = pygame.transform.scale(raw_pause, new_size_pause)
     assets['button_resume'] = pygame.transform.scale(raw_resume, new_size_resume)
 
-    
     # 3. Score Panel
     assets['panel_score'] = pygame.image.load('assets/sprites/ui/panel_score.png').convert_alpha()
     
@@ -101,7 +96,7 @@ def load_assets():
         'platinum': pygame.image.load('assets/sprites/ui/medal_platinum.png').convert_alpha()
     }
 
-    # SCORE DIGITS (BIG)
+    # --- SCORE DIGITS (BIG) ---
     assets['score_sprites'] = {}
     for i in range(10):
         assets['score_sprites'][str(i)] = pygame.image.load(f'assets/sprites/digits/{i}.png').convert_alpha()
@@ -112,7 +107,6 @@ def load_assets():
         assets['score_small_sprites'][str(i)] = pygame.image.load(f'assets/sprites/small_digits/number_small_{i}.png').convert_alpha()
 
     # --- AUDIO ---
-    # Verificăm dacă mixerul este inițializat pentru a evita erori
     if pygame.mixer.get_init():
         assets['sounds'] = {
             'wing': pygame.mixer.Sound('assets/audio/wing.wav'),

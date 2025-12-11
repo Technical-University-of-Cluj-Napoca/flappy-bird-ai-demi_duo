@@ -22,16 +22,14 @@ class Brain:
         total += self.weights[3] * 1  # bias
         return self.sigmoid(total)
     
+    # Modifies weights randomly based on a mutation rate.
     def mutate(self, mutation_rate):
-        """
-        Modifies weights randomly based on a mutation rate.
-        Ref: 'apply smaller random mutations on its weights' [cite: 301]
-        """
+        
         for i in range(len(self.weights)):
             if random.random() < mutation_rate:
                 # Add a small random value to the weight
                 self.weights[i] += random.gauss(0, 0.2)
-                # Clamp weights between -1 and 1 (optional but recommended)
+                # Clamp weights between -1 and 1 
                 self.weights[i] = max(-1, min(1, self.weights[i]))
 
     def clone(self):
