@@ -58,15 +58,18 @@ def load_assets():
     # --- MODE SELECTION BUTTONS ---
     raw_ai = pygame.image.load('assets/sprites/ui/button_ai.png').convert_alpha()
     raw_classic = pygame.image.load('assets/sprites/ui/button_classic.png').convert_alpha()
+    raw_highest = pygame.image.load('assets/sprites/ui/button_highest.png').convert_alpha()
     
     # Le scalăm la fel ca pe celelalte (ex: 2x)
     SCALE_BTN = 2.0 
     new_size_ai = (int(raw_ai.get_width() * SCALE_BTN), int(raw_ai.get_height() * SCALE_BTN))
     new_size_classic = (int(raw_classic.get_width() * SCALE_BTN), int(raw_classic.get_height() * SCALE_BTN))
-    
+    new_size_highest = (int(raw_highest.get_width() * SCALE_BTN), int(raw_highest.get_height() * SCALE_BTN))
+
     assets['button_ai'] = pygame.transform.scale(raw_ai, new_size_ai)
     assets['button_classic'] = pygame.transform.scale(raw_classic, new_size_classic) 
-
+    assets['button_highest'] = pygame.transform.scale(raw_highest, new_size_highest)
+    
     raw_restart = pygame.image.load('assets/sprites/ui/button_restart.png').convert_alpha()
     new_size_restart = (int(raw_restart.get_width() * SCALE_BTN), int(raw_restart.get_height() * SCALE_BTN))
     assets['button_restart'] = pygame.transform.scale(raw_restart, new_size_restart)

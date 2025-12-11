@@ -35,6 +35,7 @@ restart_btn_rect = assets['button_restart'].get_rect(topright=(pause_btn_rect.ri
 classic_btn_rect = assets['button_classic'].get_rect(center=(GAME_WIDTH/2 - 50, GAME_HEIGHT/2 + 90))
 # Butonul AI (Dreapta)
 ai_btn_rect = assets['button_ai'].get_rect(center=(GAME_WIDTH/2 + 50, GAME_HEIGHT/2 + 90))
+highest_btn_rect = assets['button_highest'].get_rect(center=(GAME_WIDTH/2, GAME_HEIGHT/2 + 150))
 
 # Imaginea de Tutorial (Get Ready)
 message_rect = assets['message'].get_rect(center=(GAME_WIDTH/2, GAME_HEIGHT/2.5))
@@ -55,7 +56,12 @@ SPAWNPIPE = pygame.USEREVENT
 game_state = "MENU" 
 
 score = 0
-high_score = 0
+
+#high_score = 0
+high_score_manual = 0
+high_score_ai = 0
+show_high_scores = False  # Folosit pentru toggle la butonul Highest
+
 floor_x_pos = 0
 fade_alpha = 0
 hit_sound_played = False
@@ -138,7 +144,16 @@ def draw_menu():
     # 2. Desenăm butonul AI
     alpha_ai = 255 if GAME_MODE == "AI" else 100
     assets['button_ai'].set_alpha(alpha_ai)
+
     game_surface.blit(assets['button_ai'], ai_btn_rect)
+    game_surface.blit(assets['button_highest'], highest_btn_rect)
+
+    if show_high_scores:
+        # Scor Manual (sub butonul Classic) - folosim fontul mic
+        display_score(high_score_manual, classic_btn_rect.centerx, classic_btn_rect.bottom + 7, assets['score_small_sprites'])
+        
+        # Scor AI (sub butonul AI) - folosim fontul mic
+        display_score(high_score_ai, ai_btn_rect.centerx, ai_btn_rect.bottom + 7, assets['score_small_sprites'])
 
 def draw_get_ready():
     """Desenează ecranul de tutorial"""
@@ -158,8 +173,10 @@ def draw_game_over_ui():
         medal_rect = medal_img.get_rect(center=(panel_rect.centerx - 32, panel_rect.centery + 5))
         game_surface.blit(medal_img, medal_rect)
 
+    best_score_to_show = high_score_manual if GAME_MODE == "MANUAL" else high_score_ai
+
     display_score(score, panel_rect.centerx + 36, panel_rect.centery - 10, assets['score_small_sprites'])
-    display_score(high_score, panel_rect.centerx + 36, panel_rect.centery + 10, assets['score_small_sprites'])
+    display_score(best_score_to_show, panel_rect.centerx + 36, panel_rect.centery + 10, assets['score_small_sprites'])
 
 
 # --- MAIN LOOP ---
@@ -189,6 +206,11 @@ while True:
                 if ai_btn_rect.collidepoint(game_mouse_pos):
                     GAME_MODE = "AI"
                     print("Selected: AI")
+                
+                if highest_btn_rect.collidepoint(game_mouse_pos):
+                    # Inversăm starea: dacă e vizibil devine invizibil și invers
+                    show_high_scores = not show_high_scores
+                    print(f"Show Scores: {show_high_scores}")
             
             elif game_state == "GET_READY":
                 # Orice click pornește jocul
@@ -292,6 +314,9 @@ while True:
         elif GAME_MODE == "AI":
             alive_count = population.update(pipe_manager, game_surface)
             if alive_count == 0:
+                if score > high_score_ai:
+                    high_score_ai = score
+                    print(f"New AI High Score: {high_score_ai}")
                 population.natural_selection()
                 reset_game() 
             
@@ -340,8 +365,15 @@ while True:
             
             draw_game_over_ui()
         
-        if score > high_score:
-            high_score = score
+        if GAME_MODE == "MANUAL":
+            if score > high_score_manual:
+                high_score_manual = score
+                # Aici folosim high_score_manual pentru afișare în panou
+                current_high = high_score_manual
+        else:
+            if score > high_score_ai:
+                high_score_ai = score
+                current_high = high_score_ai
 
     if floor_x_pos <= -GAME_WIDTH:
         floor_x_pos = 0
